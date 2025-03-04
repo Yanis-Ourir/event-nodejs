@@ -1,5 +1,5 @@
-const express = require('express');
-const router = express.Router();
+import { Router } from 'express';
+const router = Router();
 
 
 router.get('/', (req, res) => {
@@ -18,4 +18,4 @@ router.delete('/delete/:id', (req, res) => {
     res.send(`Utilisateur ${req.params.id} supprimé`);
 });
 
-module.exports = router;
+export default router;

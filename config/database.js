@@ -1,15 +1,19 @@
-const mysql = require('mysql');
-const connection = mysql.createConnection({
+import dotenv from 'dotenv';
+import { Sequelize } from 'sequelize';
+
+dotenv.config();
+
+const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASSWORD, {
     host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD
+    dialect: 'mysql',
+    port: 3306,
 });
 
-connection.connect();
+try {
+    await sequelize.authenticate();
+    console.log('Connection has been established successfully.');
+} catch (error) {
+    console.error('Unable to connect to the database:', error);
+}
 
-connection.query('SELECT 1 + 1 AS solution', function (err, rows, fields) {
-    if (err) throw err;
-    console.log('The solution is: ', rows[0].solution);
-});
-
-connection.end();
+export default sequelize;
