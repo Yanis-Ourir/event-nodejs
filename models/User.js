@@ -1,5 +1,6 @@
 import { DataTypes, Model } from 'sequelize';
 import sequelize from '../config/database.js';
+import bcrypt from 'bcrypt';
 
 class User extends Model {}
 
@@ -29,13 +30,30 @@ User.init (
         createdAt: {
             type: DataTypes.DATE,
             allowNull: false,
+        },
+        updatedAt: {
+            type: DataTypes.DATE,
+            allowNull: false
         }
     },
     // OTHER MODELS METHODS GOES HERE
     {
         sequelize,
-        modelName: 'User'
+        modelName: 'User',
     }
-)
+);
+
+User.beforeCreate(async (user, options) => {
+    try {
+        const hash = await bcrypt.hash(user.password, 10);
+        user.password = hash;
+    } catch (err) {
+        throw new Error();
+    }
+});
+
+User.beforeUpdate(async (user, options) => {
+    user.updatedAt = new Date();
+})
 
 export default User;

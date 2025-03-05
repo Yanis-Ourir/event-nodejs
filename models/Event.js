@@ -40,6 +40,7 @@ Event.init(
     // OTHER MODELS METHODS GOES HERE
     {
         sequelize,
+        paranoid: true,
         modelName: 'Event'
     }
 );
