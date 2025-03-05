@@ -5,17 +5,17 @@ const router = Router();
 
 
 router.get('/', async (req, res) => {
-    const [users, metadata] = await sequelize.query('SELECT * FROM users');
-    console.log(metadata);
+    const users = await User.findAll();
     res.send(users);
 })
 
 router.get('/:id', async (req, res) => {
-    const [users, metadata] = await sequelize.query(`SELECT * FROM users WHERE id = ${req.params.id}`);
-    res.send(users);
+    const user = await User.findOne({ where : { id: req.params.id} });
+    res.send(user);
 })
 
 router.post('/', async (req, res) => {
+    // RECUPERER REQ DATA POUR CREER UN USER VIA UN FORMULAIRE VUE.JS
     try {
         await User.create({
             pseudo: 'Judith Ranster',
@@ -31,8 +31,14 @@ router.post('/', async (req, res) => {
     }
 })
 
-router.delete('/delete/:id', (req, res) => {
-    res.send(`Utilisateur ${req.params.id} supprimé`);
+router.delete('/delete/:id', async (req, res) => {
+    try {
+        const user = await User.findOne({ where : { id: req.params.id }});
+        user.destroy();
+        res.send('user successfully deleted');
+    } catch (e) {
+        throw new Error();
+    }
 });
 
 export default router;
