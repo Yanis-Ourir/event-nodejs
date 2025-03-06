@@ -1,7 +1,10 @@
 import { Router } from 'express';
-import sequelize from '../config/database.js';
 import User from '../models/User.js';
+import bodyParser from 'body-parser';
+
 const router = Router();
+router.use(bodyParser.json());
+router.use(bodyParser.urlencoded({extended: true}));
 
 
 router.get('/', async (req, res) => {
@@ -16,18 +19,17 @@ router.get('/:id', async (req, res) => {
 
 router.post('/', async (req, res) => {
     // RECUPERER REQ DATA POUR CREER UN USER VIA UN FORMULAIRE VUE.JS
+    const data = req.body;
     try {
         await User.create({
-            pseudo: 'Judith Ranster',
-            email: 'judith@gmail.com',
-            password: 'password',
-            createdAt: new Date(),
-            updatedAt: new Date(),
+            pseudo: data.pseudo,
+            email: data.email,
+            password: data.password,
         });
 
         res.send('User created successfully');
     } catch (e) {
-        console.log('error while creating user ' + e);
+        res.send('error while creating user ' + e);
     }
 })
 

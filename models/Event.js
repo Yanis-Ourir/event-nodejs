@@ -1,5 +1,6 @@
 import { DataTypes, Model } from 'sequelize';
 import sequelize from '../config/database.js';
+import User from './User.js';
 
 
 class Event extends Model { }
@@ -35,6 +36,14 @@ Event.init(
         },
         deletedAt: {
             type: DataTypes.DATE,
+        },
+        UserId: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            references: {
+                model: User,
+                key: 'id',
+            },
         }
     },
     // OTHER MODELS METHODS GOES HERE
@@ -44,6 +53,15 @@ Event.init(
         modelName: 'Event'
     }
 );
+
+Event.beforeCreate((event, options) => {
+    try {
+        event.createdAt = new Date();
+        event.updatedAt = new Date();
+    } catch (err) {
+        throw new Error();
+    }
+});
 
 export default Event;
 

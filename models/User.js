@@ -47,6 +47,8 @@ User.beforeCreate(async (user, options) => {
     try {
         const hash = await bcrypt.hash(user.password, 10);
         user.password = hash;
+        user.createdAt = new Date();
+        user.updatedAt = new Date();
     } catch (err) {
         throw new Error();
     }
